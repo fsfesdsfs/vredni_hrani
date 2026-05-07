@@ -1,15 +1,7 @@
 import streamlit as st
 from PIL import Image
 import numpy as np
-pip install paddleocr
-from paddleocr import PaddleOCR
-
-ocr = PaddleOCR(lang='en')
-
-result = ocr.ocr("image.png")
-
-for line in result[0]:
-    print(line[1][0])
+import easyocr
 
 st.title("Разпознаване на вредни съставки в храни")
 
