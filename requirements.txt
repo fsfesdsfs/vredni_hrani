@@ -1,5 +1,5 @@
-easyocr
+paddleocr
+paddlepaddle
 pillow
 numpy
-torch
-torchvision
+opencv-python
