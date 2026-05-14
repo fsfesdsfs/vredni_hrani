@@ -1,4 +1,7 @@
-easyocr
+streamlit
 pillow
 numpy
-opencv-python
+easyocr
+torch
+torchvision
+torchaudio
