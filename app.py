@@ -3,7 +3,7 @@ import re
 import numpy as np
 import streamlit as st
 from PIL import Image, ImageEnhance
-import easyocr
+from papaddleocr import PaddleOCR
 
 st.set_page_config(page_title="Food Ingredients Analyzer", layout="centered")
 
@@ -69,7 +69,7 @@ elif camera_image is not None:
 @st.cache_resource
 
 def load_reader():
-    return easyocr.Reader(["bg", "en"], gpu=False)
+    return paddleocrCR(use_angle_cls=True, lang="en")
 
 reader = load_reader()
 
@@ -83,8 +83,15 @@ if image_source is not None:
 
     if st.button(text_data["analyze"]):
         image_np = np.array(image)
-        results = reader.readtext(image_np, detail=0)
-        extracted_text = " ".join(results)
+        results = reader.ocr(image_np, cls=True)
+
+        extracted = []
+
+        for line in results:
+            for item in line:
+                extracted.append(item[1][0])
+
+        extracted_text = " ".join(extracted)
 
         if extracted_text.strip() == "":
             st.error(text_data["error"])
@@ -107,4 +114,3 @@ if image_source is not None:
                     st.warning(item)
             else:
                 st.success(text_data["none"])
-
