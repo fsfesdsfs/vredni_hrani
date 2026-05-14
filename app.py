@@ -51,7 +51,7 @@ harmful_ingredients = {
     "мононатриев глутамат": "MSG"
 }
 
-language = st.selectbox(translations["bg"]["language"], ["bg", "en"])
+language = st.selectbox("Language / Език", ["bg", "en"])
 text_data = translations[language]
 
 st.title(text_data["title"])
@@ -107,3 +107,4 @@ if image_source is not None:
                     st.warning(item)
             else:
                 st.success(text_data["none"])
+
