@@ -3,7 +3,7 @@ import re
 import numpy as np
 import streamlit as st
 from PIL import Image, ImageEnhance
-from papaddleocr import PaddleOCR
+from paddleocr import PaddleOCR
 
 st.set_page_config(page_title="Food Ingredients Analyzer", layout="centered")
 
@@ -69,7 +69,7 @@ elif camera_image is not None:
 @st.cache_resource
 
 def load_reader():
-    return paddleocrCR(use_angle_cls=True, lang="en")
+    return PaddleOCR(use_angle_cls=True, lang="en")
 
 reader = load_reader()
 
@@ -114,3 +114,6 @@ if image_source is not None:
                     st.warning(item)
             else:
                 st.success(text_data["none"])
+
+
+
