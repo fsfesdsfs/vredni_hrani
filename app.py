@@ -3,6 +3,8 @@ from PIL import Image
 import numpy as np
 import easyocr
 
+st.set_page_config(page_title="Разпознаване на вредни съставки")
+
 st.title("Разпознаване на вредни съставки в храни")
 
 st.write("""
@@ -11,14 +13,20 @@ st.write("""
 """)
 
 harmful_ingredients = {
-    "E621": "Мононатриев глутамат",
-    "E102": "Тартразин",
-    "E250": "Натриев нитрит",
+    "e621": "Мононатриев глутамат",
+    "e102": "Тартразин",
+    "e250": "Натриев нитрит",
     "палмово масло": "Съдържа наситени мазнини",
     "palm oil": "Contains saturated fats",
     "aspartame": "Изкуствен подсладител",
-    "E951": "Аспартам"
+    "e951": "Аспартам"
 }
+
+@st.cache_resource
+def load_reader():
+    return easyocr.Reader(['bg', 'en'])
+
+reader = load_reader()
 
 uploaded_file = st.file_uploader(
     "Качи изображение",
@@ -37,31 +45,41 @@ elif camera_image is not None:
 
 if image is not None:
 
-    st.image(image, caption="Избрано изображение", use_container_width=True)
+    image = image.convert("RGB")
+
+    st.image(
+        image,
+        caption="Избрано изображение",
+        use_container_width=True
+    )
 
     image_np = np.array(image)
 
-    reader = easyocr.Reader(['bg', 'en'])
+    with st.spinner("Разпознаване на текста..."):
 
-    results = reader.readtext(image_np, detail=0)
+        try:
+            results = reader.readtext(image_np, detail=0)
 
-    extracted_text = " ".join(results)
+            extracted_text = " ".join(results)
 
-    st.subheader("Разпознат текст:")
-    st.write(extracted_text)
+            st.subheader("Разпознат текст:")
+            st.write(extracted_text)
 
-    found = []
+            found = []
 
-    text_lower = extracted_text.lower()
+            text_lower = extracted_text.lower()
 
-    for ingredient, description in harmful_ingredients.items():
-        if ingredient.lower() in text_lower:
-            found.append((ingredient, description))
+            for ingredient, description in harmful_ingredients.items():
+                if ingredient in text_lower:
+                    found.append((ingredient, description))
 
-    st.subheader("Открити вредни съставки:")
+            st.subheader("Открити вредни съставки:")
 
-    if found:
-        for ingredient, description in found:
-            st.error(f"{ingredient} -> {description}")
-    else:
-        st.success("Не са открити известни вредни съставки.")
+            if found:
+                for ingredient, description in found:
+                    st.error(f"{ingredient.upper()} → {description}")
+            else:
+                st.success("Не са открити известни вредни съставки.")
+
+        except Exception as e:
+            st.error(f"Възникна грешка: {e}")
