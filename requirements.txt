@@ -1,7 +1,6 @@
 streamlit
-easyocr
+paddleocr
 pillow
 numpy
-torch
-torchvision
+paddlepaddle
 opencv-python-headless
