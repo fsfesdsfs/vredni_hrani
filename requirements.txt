@@ -1,8 +1,7 @@
-streamlit==1.45.1
+streamlit
+easyocr
 pillow
 numpy
-easyocr
 torch
 torchvision
-torchaudio
 opencv-python-headless
